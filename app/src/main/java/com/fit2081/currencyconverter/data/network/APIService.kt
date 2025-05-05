@@ -15,7 +15,7 @@ interface APIService {
 
     // The companion object provides a factory method to create the API service
     companion object {
-        var BASE_URL = "http://api.frankfurter.dev"
+        var BASE_URL = "https://api.frankfurter.dev"
 
         fun create(): APIService {
             val retrofit = Retrofit.Builder()
