@@ -1,5 +1,6 @@
 package com.fit2081.currencyconverter
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fit2081.currencyconverter.data.repository.RatesRepository
 import com.fit2081.currencyconverter.ui.theme.CurrencyConverterTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +43,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun CurrencyConverterScreen(modifier: Modifier) {
     var repository: RatesRepository = RatesRepository()
@@ -73,7 +76,14 @@ fun CurrencyConverterScreen(modifier: Modifier) {
             label = {Text("Amount")}
         )
         Button(
-            onClick = {}
+            onClick = {
+                coroutineScope.launch {
+                    val rate = repository.getRate(baseCurrency,targetCurrency)?.rates?.get(targetCurrency)
+                    if (rate != null) {
+                        result = String.format("%.2f", (amount.toDouble() * rate))
+                    }
+                }
+            }
         ) {
             Text("Get Rate")
         }
